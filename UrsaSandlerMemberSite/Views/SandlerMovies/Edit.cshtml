@@ -1,0 +1,61 @@
+﻿@model UrsaSandlerMemberSite.Models.SandlerMovie
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+
+<h1 class="text-6xl">Edit Sandler Movie</h1>
+
+<div class="container w-max m-4 p-2">
+    <a asp-action="AssignActor" asp-route-id="@Model.Id" class="justify-center max-h-max max-w-max border-b-2 bg-indigo-50 border-blue-300 text-blue-500 hover:border-blue-500  flex items-center hover:shadow-lg transform hover:-translate-y-1 hover:scale-105 font-bold py-2 px-4 rounded mr-0 ml-auto">Assign Actor/Actress</a>
+</div>
+
+
+<h4>SandlerMovie</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsHappyMadison" /> @Html.DisplayNameFor(model => model.IsHappyMadison)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReleaseDate" class="control-label"></label>
+                <input asp-for="ReleaseDate" class="form-control" />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Synonpsis" class="control-label"></label>
+                <input asp-for="Synonpsis" class="form-control" />
+                <span asp-validation-for="Synonpsis" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PosterUrl" class="control-label"></label>
+                <input asp-for="PosterUrl" class="form-control" />
+                <span asp-validation-for="PosterUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

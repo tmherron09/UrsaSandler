@@ -1,0 +1,185 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using UrsaSandlerMemberSite.Data;
+using UrsaSandlerMemberSite.Models;
+using UrsaSandlerMemberSite.ViewModels;
+
+namespace UrsaSandlerMemberSite.Services
+{
+
+    // Temp service to serve as replacement for IRepository given scaled scope.
+    public class DataService
+    {
+
+        public readonly ApplicationDbContext _context;
+        public readonly ImageService _imageService;
+        public DataService(ApplicationDbContext context, ImageService imageService)
+        {
+            _context = context;
+            _imageService = imageService;
+        }
+
+        public List<SandlerMovie> GetAllSandlerMovies() => _context.SandlerMovies.ToList();
+
+        public SandlerMovie GetMovieById(int id) =>
+            _context.SandlerMovies.Where(sm => sm.Id == id).FirstOrDefault();
+
+        public List<SandlerMovie> GetMoviesAlphabetically() => _context.SandlerMovies.OrderBy(m => m.Title).ToList();
+
+        public List<Actor> GetAllActors() =>
+            _context.Actors.ToList();
+        public Actor GetActorById(int id) =>
+            _context.Actors.Where(a => a.Id == id).FirstOrDefault();
+
+
+        public double GetMovieRating(int sandlerMovieId)
+        {
+
+
+            return 0;
+        }
+
+        public IEnumerable<MovieComment> GetMovieCommentsById(int sandlerMovieId) =>
+            _context.MovieComments.Where(sm => sm.Id == sandlerMovieId).Include(sm => sm.CommentPoster);
+
+        public async Task<MovieComment> CreateMovieCommentPost(IFormCollection collection, string userId)
+        {
+            MovieComment movieComment;
+            if (!collection.TryGetValue("SandlerMovie.Id", out var formMovieId))
+            {
+                movieComment = null;
+                return movieComment;
+            }
+            movieComment = new MovieComment();
+            movieComment.SandlerMovieId = Int32.Parse(formMovieId);
+            movieComment.ClubMemberId = userId;
+            movieComment.Comment = collection["postCommentData"];
+            movieComment.TimeStamp = DateTime.Now;
+
+            try
+            {
+                await _context.MovieComments.AddAsync(movieComment);
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                movieComment = null;
+                return movieComment;
+            }
+            return movieComment;
+        }
+
+        public IEnumerable<Actor> GetMovieStarringRolesById(int sandlerMovieId) =>
+            _context.ActorStarringRoles.Where(sr => sr.SandlerMovie.Id == sandlerMovieId).Select(sr => sr.Actor);
+
+        public IEnumerable<Actor> GetMovieCoStarsById(int sandlerMovieId) =>
+            _context.CoStarringRoles.Where(csr => csr.SandlerMovie.Id == sandlerMovieId).Select(csr => csr.CoStar);
+
+        public IEnumerable<Actor> GetMovieGuestAppearencesById(int sandlerMovieId) =>
+            _context.GuestAppearences.Where(ga => ga.SandlerMovie.Id == sandlerMovieId).Select(ga => ga.GuestStar);
+
+        //public bool AssignActorRole(SandlerMovie sandlerMovie, Actor actor, AssignActorViewModel.AssignType assignmentType)
+        //{
+
+        //}
+
+        public async Task<bool> AssignActorRole(AssignActorViewModel viewModel)
+        {
+            viewModel.SandlerMovie = GetMovieById(viewModel.SandlerMovieId);
+            viewModel.Actor = GetActorById(viewModel.ActorId);
+
+            if (viewModel.SandlerMovie == null || viewModel.Actor == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                switch (viewModel.AssignmentType)
+                {
+                    case AssignActorViewModel.AssignType.StarringRole:
+                        ActorStarringRole actorRole = new ActorStarringRole() { Actor = viewModel.Actor, SandlerMovie = viewModel.SandlerMovie };
+                        await _context.ActorStarringRoles.AddAsync(actorRole);
+                        break;
+                    case AssignActorViewModel.AssignType.CoStarringRole:
+                        CoStarringRole coStarringRole = new CoStarringRole() { CoStar = viewModel.Actor, SandlerMovie = viewModel.SandlerMovie };
+                        await _context.CoStarringRoles.AddAsync(coStarringRole);
+                        break;
+                    case AssignActorViewModel.AssignType.GuestAppearence:
+                        GuestAppearence guestAppearence = new GuestAppearence() { GuestStar = viewModel.Actor, SandlerMovie = viewModel.SandlerMovie };
+                        await _context.GuestAppearences.AddAsync(guestAppearence);
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid Enum Value");
+                }
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public async Task<bool> AssignActorRole(int sandlerMovieId, int actorId, AssignActorViewModel.AssignType assignmentType)
+        {
+            var sandlerMovie = GetMovieById(sandlerMovieId);
+            var actor = GetActorById(actorId);
+
+            if (sandlerMovie == null || actor == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                switch (assignmentType)
+                {
+                    case AssignActorViewModel.AssignType.StarringRole:
+                        ActorStarringRole actorRole = new ActorStarringRole() { Actor = actor, SandlerMovie = sandlerMovie };
+                        await _context.ActorStarringRoles.AddAsync(actorRole);
+                        break;
+                    case AssignActorViewModel.AssignType.CoStarringRole:
+                        CoStarringRole coStarringRole = new CoStarringRole() { CoStar = actor, SandlerMovie = sandlerMovie };
+                        await _context.CoStarringRoles.AddAsync(coStarringRole);
+                        break;
+                    case AssignActorViewModel.AssignType.GuestAppearence:
+                        GuestAppearence guestAppearence = new GuestAppearence() { GuestStar = actor, SandlerMovie = sandlerMovie };
+                        await _context.GuestAppearences.AddAsync(guestAppearence);
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid Enum Value");
+                }
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch { return false; }
+        }
+
+        public string GetUserFirstName(string userEmail)
+        {
+            ClubMember clubUser = _context.Users.Where(u => u.Email == userEmail).FirstOrDefault();
+
+            return clubUser.FirstName;
+        }
+
+        // Creational
+
+        public async Task AddNewSandlerMovieAsync(SandlerMovie sandlerMovie)
+        {
+            sandlerMovie.PosterUrl = await _imageService.GetMoviePostUrl(sandlerMovie.Title);
+            _context.Add(sandlerMovie);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddActorAsync(Actor actor)
+        {
+            actor.ImageUrl = await _imageService.GetActorPhoto(actor.FullName);
+            _context.Add(actor);
+            await _context.SaveChangesAsync();
+        }
+    
+    }
+
+}

@@ -1,0 +1,11 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using UrsaSandlerMemberSite
+@using UrsaSandlerMemberSite.Models
+@using UrsaSandlerMemberSite.Data
+@using UrsaSandlerMemberSite.Services
+@using Microsoft.AspNetCore.Http;
+@namespace UrsaSandlerMemberSite.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject IHttpContextAccessor  _httpContext
+@inject DataService _dataService
+@inject SignInManager<ClubMember> SignInManager

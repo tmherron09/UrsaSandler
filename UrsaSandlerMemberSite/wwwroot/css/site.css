@@ -1,0 +1,14 @@
+﻿.animate-spin-slow {
+    animation: spin 4s linear infinite;
+}
+
+a.nh:hover {
+    text-decoration: none;
+}
+
+
+/*@media only screen and (max-width: 767px) {
+    aside {
+        min-width: 20rem;
+    }
+}*/

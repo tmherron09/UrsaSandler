@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - UrsaSandlerMemberSite</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+
+    <link rel="stylesheet" href="~/css/tailwind.min.css" />
+    <link rel="stylesheet" href="~/css/all.min.css" />
+
+    <!-- Google Fonts-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        .font-rubik {
+            font-family: 'Rubik', sans-serif;
+        }
+
+        .font-roboto {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+<body class="mb-0">
+    <div class="flex flex-row items-stretch min-h-screen text-gray-800">
+        <aside id="mySideBar"
+               class="w-max md:shadow transform -translate-x-full md:translate-x-0 transition-transform duration-500 ease-in bg-gradient-to-br from-blue-500 to-blue-400 z-40">
+            <div class="flex items-center px-4 pt-4 pb-4 w-max">
+                <div class="flex flex-col lg:flex-row items-center">
+                    <img src="~/images/sandler_head.png" class="h-24 lg:h-16 mr-2 rounded-2xl" style="animation: spin 4s linear infinite;" />
+                    <div class="flex flex-col font-rubik">
+                        <span class="lg:leading-10 text-gray-100 text-xl lg:text-2xl font-bold ml-1 w-max">Ursa Sandler</span>
+                        <span class="lg:leading-10 text-gray-100 text-xl lg:text-2xl font-bold ml-1 ">Movie Club</span>
+                    </div>
+                </div>
+                <span id="sideNavHide" class="flex md:hidden ml-3 p-1 rounded bg-white" onclick="sideNavHide()">
+                    <svg class="h-6 w-6 text-black" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" viewBox="0 0 512 512">
+                        <path d='M328 112L184 256l144 144' />
+                    </svg>
+                </span>
+
+            </div>
+            @* Start SideNav Sections *@
+            @if (SignInManager.IsSignedIn(User))
+                {
+
+            <div class="flex flex-col w-full">
+                <div class="my-px">
+                    <span class="flex font-medium text-3xl text-white px-4">
+                        Club Areas
+                    </span>
+                </div>
+                <div class="flex flex-col h-64 justify-around text-2xl font-rubik">
+                    <div class="my-px">
+                        <a asp-controller="SandlerMovies" asp-action="Index"
+                           class="group flex flex-row items-center h-10 px-3 rounded-lg text-white hover:bg-gray-100">
+                            <span class="flex items-center justify-center text-xl">
+                                <i class="fas fa-film group-hover:text-blue-600"></i>
+                            </span>
+                            <span class="ml-3 group-hover:text-black">Sandler Movies</span>
+                        </a>
+                    </div>
+                    <div class="my-px">
+                        <a asp-controller="Actors" asp-action="Index"
+                           class="group flex flex-row items-center h-10 px-3 rounded-lg text-white hover:bg-gray-100">
+                            <span class="flex items-center justify-center text-xl">
+                                <i class="fas fa-film group-hover:text-blue-600"></i>
+                            </span>
+                            <span class="ml-3 group-hover:text-black">Actors/Actresses</span>
+                        </a>
+                    </div>
+                    <div class="my-px">
+                        <a asp-controller="Meetings" asp-action="Index"
+                           class="group flex flex-row items-center h-10 px-3 rounded-lg text-white hover:bg-gray-100">
+                            <span class="flex items-center justify-center text-xl">
+                                <i class="fas fa-film group-hover:text-blue-600"></i>
+                            </span>
+                            <span class="ml-3 group-hover:text-black">Meetings</span>
+                        </a>
+                    </div>
+                    <div class="my-px">
+                        <a asp-controller="ClubMembers" asp-action="Index"
+                           class="group flex flex-row items-center h-10 px-3 rounded-lg text-white hover:bg-gray-100">
+                            <span class="flex items-center justify-center text-xl">
+                                <i class="fas fa-film group-hover:text-blue-600"></i>
+                            </span>
+                            <span class="ml-3 group-hover:text-black">Club Members</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            }
+        </aside>
+
+        <main id="main" class="main h-auto flex flex-col flex-grow md:ml-0 transition-all duration-150 ease-in">
+            <header class=" bg-white shadow py-4 px-4">
+                <div class="flex items-center flex-row">
+                    @*<form action="#">
+                            <div class="hidden md:flex relative">
+                                <div class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
+                                    <svg class="h-6 w-6"
+                                         fill="none"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         stroke-width="2"
+                                         viewBox="0 0 24 24"
+                                         stroke="currentColor">
+                                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </div>
+
+                                <input id="search"
+                                       type="text"
+                                       name="search"
+                                       class="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-300 w-full h-10 focus:outline-none focus:border-indigo-400"
+                                       placeholder="*Coming Soon"
+                                       disabled />
+                            </div>
+                        </form>*@
+                    <div class="flex md:hidden">
+                        <span id="sideNavReveal"
+                              onclick="sideNavReveal()"
+                              class="ml-3 p-1 rounded bg-gray-200">
+                            <svg class="h-6 w-6 text-gray-500"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 stroke-width="48"
+                                 viewBox="0 0 512 512">
+                                <path d="M184 112l144 144-144 144" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="flex ml-auto">
+                        <partial name="_LoginPartial" />
+
+                    </div>
+                </div>
+            </header>
+            <div>
+                @RenderBody()
+            </div>
+        </main>
+
+
+    </div>
+
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+        renderBodyResize();
+        window.addEventListener('resize', renderBodyResize);
+
+        async function renderBodyResize() {
+            let mainWidth = document.getElementById("main");
+            let sideNavWidth = document.getElementById("mySideBar").offsetWidth;
+            if (screen.width >= 768) {
+
+                mainWidth.style.marginLeft = "0px";
+            } else {
+                //await delay(1500);
+                mainWidth.style.marginLeft = `-${sideNavWidth}px`;
+                //mainWidth.style.marginLeft = `-20rem`;
+            }
+            //console.log(`Window width is ${screen.width}`);
+            //console.log(`SideNav width is ${sideNavWidth}`);
+            //console.log(`Main section margin left is ${mainWidth.style.marginLeft}`);
+        }
+
+    </script>
+
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

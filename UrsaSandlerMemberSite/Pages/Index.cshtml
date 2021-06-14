@@ -1,0 +1,64 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - UrsaSandlerMemberSite</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/tailwind.min.css" />
+
+    <style>
+        .animate-spin-slow {
+            animation: spin 4s linear infinite;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="relative bg-white ">
+        <div class="max-w-7xl mx-auto">
+            <div class="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
+                <svg class="hidden lg:block absolute right-0 inset-y-0 h-full w-48 text-white transform translate-x-1/2" fill="currentColor" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                    <polygon points="50,0 100,0 50,100 0,100" />
+                </svg>
+                <div class="relative pt-6 px-4 sm:px-6 lg:px-8"></div>
+
+                <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+                    <div class="w-full mx-auto text-left md:w-11/12 xl:w-9/12 md:text-center">
+                        <div class="mb-8 text-4xl font-extrabold leading-none tracking-normal text-gray-900 md:text6xl md:tracking-tight">
+                            <span class="text-gray-500">Welcome to</span><span class="block w-full py-2 text-transparent bg-clip-text leading-12 bg-gradient-to-r from-purple-800 to-red-400 lg:inline"> Ursa Sandler Movie Club! </span>
+                            <br />
+                            <span class="text-gray-500 text-2xl">A grueling but rewarding experience of the decades spanning library of Adam Sandler.</span>
+                        </div>
+                    </div>
+                    <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+                        Join us once a week for a discussion of the latest viewing. Movies are decided weekly and we aim to watch those most readily accessible or
+                        streaming. Anyone is welcome to register for the website, but for specific information on attending a club meeting, please see details inside.
+                    </p>
+                    <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+                        <div class="mt-3 sm:mt-0 sm:ml-3 rounded-md shadow">
+                            <a asp-area="Identity" asp-page="/Account/Login" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"> Login </a>
+                        </div>
+                        <div class="mt-3 sm:mt-0 sm:ml-3">
+                            <a asp-area="Identity" asp-page="/Account/Register" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10"> Register </a>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+        <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 ">
+                <div class="h-full w-full object-cover md:h-full lg:w-full lg:h-full sm:h-full xs:h-full bg-red-500">
+                    <div class="transform xl:scale-75 xl:translate-x-1/4 lg:scale-50 md:scale-75 md:translate-x-36 sm:scale-75 sm:mx-auto">
+                        <img class="animate-spin-slow" src="~/images/sandler_head.png" />
+                    </div>
+                </div>    
+        </div>
+    </div>
+</body>

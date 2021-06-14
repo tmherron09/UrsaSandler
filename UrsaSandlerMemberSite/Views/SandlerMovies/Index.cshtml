@@ -1,0 +1,80 @@
+﻿@model IEnumerable<UrsaSandlerMemberSite.Models.SandlerMovie>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container">
+    <div class="w-full mx-auto text-center m-6 font-rubik">
+        <span class="text-5xl font-medium">Sandler Movie Index</span>
+    </div>
+    <div class="p-2 md:mx-6 w-max">
+        <a asp-action="Create" class="border-2 p-2 text-xl border-gray-500 bg-gray-50 text-black font-roboto hover:text-white hover:bg-gray-900 hover:no-underline">
+            Add Movie New
+        </a>
+    </div>
+    <div class="max-w-screen md:mx-8 mt-2">
+        <table class="max-w-screen shadow-lg divide-y divid-y-gray-800 border-b-4 border-gray-200">
+            <thead>
+                <tr class="text-xs font-medium text-gray-700 uppercase font-roboto ">
+                    <th class="text-left pl-2 py-3">
+                        Title
+                    </th>
+                    <th class="text-left whitespace-nowrap pr-2  py-3">
+                        Happy Madison Production
+                    </th>
+                    <th class="text-left py-3">
+                        @Html.DisplayNameFor(model => model.ReleaseDate)
+                    </th>
+                    <th class="text-left py-3 hidden lg:block">
+                        @Html.DisplayNameFor(model => model.Synonpsis)
+                    </th>
+                    <th class="text-left py-3">
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="text-sm font-medium text-gray-500">
+                @foreach (var item in Model)
+                {
+                    DateTime date = item.ReleaseDate ?? DateTime.MinValue;
+                    string formatedDate = "";
+                    if (date != DateTime.MinValue)
+                    {
+                        formatedDate = date.ToString("MMM dd, yyyy");
+                    }
+                <tr>
+                    <td class="group h-full">
+                        <form asp-action="Details" asp-route-id="@item.Id">
+                            <button type="submit" class="py-auto font-medium text-gray-500 bg-white group-hover:text-blue-600 hover:no-underline w-48 h-8">
+                                @item.Title
+                            </button>
+                        </form>
+                    </td>
+                    
+                    <td class=" px-8 text-2xl text-center">
+                        @if (item.IsHappyMadison)
+                        {
+                            <i class="fas fa-check-circle"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-minus-circle"></i>
+                        }
+                    </td>
+                    <td class="text-sm font-medium text-gray-500 whitespace-nowrap pr-4">
+                        @formatedDate
+                    </td>
+                    <td class="text-sm font-medium text-gray-500 overflow-hidden hidden lg:block">
+                        @item.Synonpsis
+                    </td>
+                    <td class="text-sm font-medium text-blue-300 px-8">
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

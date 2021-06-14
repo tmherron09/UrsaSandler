@@ -1,0 +1,46 @@
+﻿@model UrsaSandlerMemberSite.ViewModels.AssignActorViewModel
+@using UrsaSandlerMemberSite.Services
+@inject DataService _dataService
+
+@{
+    List<Actor> allActors = _dataService.GetAllActors();
+    SelectList actorList = new SelectList(allActors, nameof(Actor.Id), nameof(Actor.FullName));
+
+}
+
+
+<div class="bg-red-500">
+    <div class="w-full bg-cover bg-no-repeat bg-center" style="height: 400px; background-image: url(@Model.SandlerMovie.PosterUrl);"></div>
+    <div class="p-4"></div>
+
+    <div class="justify-center w-full py-3 pl-3">
+        <h2 class="text-6xl font-bold text-white font-serif">@Model.SandlerMovie.Title</h2>
+    </div>
+</div>
+<hr class="border-4 border-gray-400" />
+<div class="container min-w-full bg-blue-100 pt-2 pb-8">
+    <div class="w-max px-8 py-4 mx-auto mt-16 bg-white rounded-lg shadow-lg dark:bg-gray-800">
+        <div class="my-4">
+            <p class="text-center text-3xl font-bold text-gray-800 dark:text-white">Role Assignment</p>
+        </div>
+
+        <form asp-controller="SandlerMovies" asp-action="AssignActor">
+            <input type="hidden" asp-for="SandlerMovieId" />
+            <div class="flex justify-between">
+                <select asp-for="AssignmentType" class="flex-1 w-max text-gray-700 py-2 px-3 mx-4 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                    <option value="">Role Type</option>
+                    <option value="0">Starring Role</option>
+                    <option value="1">CoStarring Role</option>
+                    <option value="2">Guest Appearence</option>
+                </select>
+                <select asp-for="ActorId" asp-items="actorList" class="flex-1 w-max text-gray-700 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                    <option value="">Select an Actor/Actress</option>
+                </select>
+
+            </div>
+            <div class="flex justify-right">
+                <button type="submit" class="border-b-2 mt-6 bg-blue-100 border-blue-300 text-blue-500 hover:border-blue-500 hover:shadow-lg transform hover:-translate-y-1 hover:scale-105 font-bold py-2 px-4 rounded ml-auto">Post Comment</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ClubMember> SignInManager
+@inject UserManager<ClubMember> UserManager
+
+@{
+    bool signedIn = SignInManager.IsSignedIn(User);
+    string user = "";
+    if (signedIn)
+    {
+        user = _httpContext.HttpContext.Session.GetString("username");
+        if (user == "" || user == null)
+        {
+            var firstName = _dataService.GetUserFirstName(User.Identity.Name);
+            _httpContext.HttpContext.Session.SetString("username", firstName);
+            user = firstName;
+        }
+
+    }
+}
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div href class="flex flex-row items-center">
+        <a class="flex flex-row items-center" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+            <img src="https://picsum.photos/600/300"
+                 alt="User Profile Image"
+                 class="h-10 w-10 bg-gray-200 border rounded-full" />
+            <span class="flex flex-col ml-2">
+                <span class="text-gray-500 text-xl leading-none mt-1">
+                    @user
+                </span>
+            </span>
+        </a>
+        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+            <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+        </form>
+    </div>
+}
+else
+{
+    <div href class="flex flex-row items-center">
+        <a class="text-gray-500 text-xl leading-none mt-1" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class="text-gray-500 text-xl leading-none mt-1 ml-4" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    </div>
+}
