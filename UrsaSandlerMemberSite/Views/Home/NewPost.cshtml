@@ -1,0 +1,25 @@
+﻿@model NewsPost
+
+<div class="flex flex-col flex-grow border-l border-r border-gray-300">
+    <div class="flex justify-between flex-shrink-0 px-8 py-4 border-b border-gray-300">
+        <h1 class="text-xl font-semibold">Add News Post</h1>
+    </div>
+    <form asp-action="NewPost" method="post" class="flex w-full p-8 border-b-4 border-gray-300">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <img class="flex-shrink-0 w-12 h-12 bg-gray-400 rounded-full" src="https://picsum.photos/600" />
+        <div class="flex flex-col flex-grow ml-4">
+            <input asp-for="Title" type="text" class="flex items-center h-8 mb-2 px-3 text-sm border border-gray-500 rounded-sm hover:bg-gray-200" />
+            <span asp-validation-for="Title" class="text-xs text-red-500"></span>
+            <textarea asp-for="BodyText" class="p-3 bg-transparent border border-gray-500 rounded-sm hover:bg-gray-200" rows="3" placeholder="Come on already, just say it!"></textarea>
+            <span asp-validation-for="BodyText" class="text-xs text-red-500"></span>
+            <div class="flex justify-between mt-2">
+                <div class="flex flex-col">
+                    <input class="flex items-center h-8 px-3 text-xs rounded-sm hover:bg-gray-200" placeholder="Add image url*" />
+                    <span class="text-sm text-gray-300 pl-3">*Not Required</span>
+                </div>
+                <input type="submit" class="flex items-center h-8 px-3 text-xs rounded-sm bg-gray-300 hover:bg-gray-400" value="Post" />
+                <a asp-action="Index" class="flex items-center h-8 px-3 text-xs rounded-sm bg-gray-300 hover:bg-gray-400">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>

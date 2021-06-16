@@ -13,8 +13,7 @@ namespace UrsaSandlerMemberSite.Models
         public DateTime MeetingDate { get; set; }
         public SandlerMovie MeetingMovie { get; set; }
         public List<Attendance> Attenance { get; set; }
-
-
+        public List<MeetingComment> MeetingComments { get; set; }
 
     }
 }

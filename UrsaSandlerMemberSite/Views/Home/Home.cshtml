@@ -1,3 +1,55 @@
-﻿
+﻿@model HomeViewModel
 
-<h1>Club Member Home Temp.</h1>
+
+
+<div class="flex flex-col flex-grow border-l border-r border-gray-300">
+    @if (Model.ThisWeekMeeting != null)
+    {
+        <div class="flex flex-col md:flex-row max-h-full bg-red-500 border-b border-gray-500">
+            <div class="flex-1 md:border-r-2">
+                <img src="@Model.ThisWeekMeeting.MeetingMovie.PosterUrl" class="object-scale-down max-h-96 mx-auto" />
+            </div>
+            <div class="flex-1 px-8 self-center mt-6 md:mt-0">
+                <a asp-controller="Meetings" asp-action="Details" asp-route-id="@Model.ThisWeekMeeting.Id" class="block text-5xl">This Week's Meeting</a>
+                <h3 class="text-3xl mt-2">Join us this Week for</h3>
+                <span class="block uppercase font-bold text-3xl text-white mt-5 mb-6 md:mb-0">
+                    <a asp-controller="SandlerMovies" asp-action="Details" asp-route-id="@Model.ThisWeekMeeting.MeetingMovie.Id">@Model.ThisWeekMeeting.MeetingMovie.Title</a>
+                </span>
+            </div>
+        </div>
+    }
+
+    <div class="flex justify-between flex-shrink-0 px-8 py-4 border-b border-gray-300">
+        <h1 class="text-xl font-semibold">Movie Club News</h1>
+        <a class="flex items-center h-8 px-2 text-sm bg-gray-300 rounded-sm hover:bg-gray-400">New post</a>
+    </div>
+
+    @foreach (var post in Model.NewsPosts)
+    {
+        <div class="flex w-full p-8 border-b border-gray-300">
+            <img class="flex-shrink-0 w-12 h-12 bg-gray-400 rounded-full" src="https://picsum.photos/600" />
+            <div class="flex flex-col flex-grow ml-4">
+                <div class="flex">
+                    <span class="font-semibold">Post Title</span>
+                    <span class="ml-1">@post.ClubMember.FirstName</span>
+                    <span class="ml-auto text-sm">@post.DateFormatted</span>
+                </div>
+                <p class="mt-1">@post.BodyText</p>
+                @if (post.ImageUrl != null || post.ImageUrl != "")
+                {
+                    <div class="flex items-center justify-center h-64 mt-2 bg-gray-200 ">
+                        <img class="font-semibold text-gray-500 max-h-full object-scale-down" src="@post.ImageUrl" />
+                    </div>
+                }
+                <div class="flex mt-2">
+                    <span class="text-sm font-semibold cursor-not-allowed">Like</span>
+                    <span class="ml-2 text-sm font-semibold cursor-not-allowed">Reply</span>
+                    <span class="ml-2 text-sm font-semibold cursor-not-allowed">Share</span>
+                </div>
+            </div>
+        </div>
+    }
+
+
+
+</div>
