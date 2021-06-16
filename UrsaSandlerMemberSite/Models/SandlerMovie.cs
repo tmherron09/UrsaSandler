@@ -9,7 +9,7 @@ namespace UrsaSandlerMemberSite.Models
 {
     public class SandlerMovie
     {
-        
+
         public int Id { get; set; }
         [Required(ErrorMessage = "Movie title required.")]
         public string Title { get; set; }
@@ -27,5 +27,18 @@ namespace UrsaSandlerMemberSite.Models
 
         [NotMapped]
         public double Rating { get; set; }
+        [NotMapped]
+        public string DateFormatted
+        {
+            get
+            {
+                if (ReleaseDate != null)
+                {
+                    var date = (DateTime)ReleaseDate;
+                    return date.ToString("MMM dd, yyyy");
+                }
+                return "";
+            }
+        }
     }
 }

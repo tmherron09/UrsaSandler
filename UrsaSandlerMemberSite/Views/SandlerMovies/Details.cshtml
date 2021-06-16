@@ -3,12 +3,6 @@
 @{
     ViewData["Title"] = "Details";
     string postCommentData = "";
-    DateTime date = Model.SandlerMovie.ReleaseDate ?? DateTime.MinValue;
-    string formatedDate = "";
-    if(date != DateTime.MinValue)
-    {
-        formatedDate = date.ToString("MMM dd, yyyy");
-    }
 }
 
 <div class="bg-red-500">
@@ -53,7 +47,7 @@
                             <circle cx="12" cy="17.486" r="1.285"></circle>
                         </g>
                     </svg>
-                    <span class="leading-5 ml-1">Released @formatedDate</span>
+                    <span class="leading-5 ml-1">Released @Model.SandlerMovie.DateFormatted</span>
                 </span>
             </div>
             <div class="pt-2 text-white">
