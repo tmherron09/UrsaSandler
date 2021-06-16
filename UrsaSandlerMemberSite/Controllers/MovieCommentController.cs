@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,7 @@ using UrsaSandlerMemberSite.Services;
 
 namespace UrsaSandlerMemberSite.Controllers
 {
+    [Authorize]
     public class MovieCommentController : Controller
     {
         private readonly UserManager<ClubMember> _userManager;

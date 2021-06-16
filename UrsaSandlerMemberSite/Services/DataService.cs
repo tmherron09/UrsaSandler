@@ -82,6 +82,20 @@ namespace UrsaSandlerMemberSite.Services
         public IEnumerable<Actor> GetMovieGuestAppearencesById(int sandlerMovieId) =>
             _context.GuestAppearences.Where(ga => ga.SandlerMovie.Id == sandlerMovieId).Select(ga => ga.GuestStar);
 
+        public IEnumerable<NewsPost> GetAllNewsPosts()
+        {
+            return _context.NewsPosts.Include(np => np.ClubMember).OrderByDescending(np=> np.Timestamp);
+        }
+
+        public IEnumerable<NewsPost> GetNewsPostsPage(int pageNumber, int amount) =>
+            _context.NewsPosts.Include(np => np.ClubMember).OrderByDescending(np => np.Timestamp).Skip(pageNumber * amount).Take(amount);
+
+        public Meeting GetMeetingById(int meetingId) =>
+            _context.Meetings.Where(m => m.Id == meetingId).Include(m => m.MeetingMovie).FirstOrDefault();
+
+        public IEnumerable<ClubMember> GetAttendanceByMeetingId(int meetingId) =>
+            _context.Attendance.Where(a => a.Meeting.Id == meetingId).Include(a => a.ClubMember).Select(a=> a.ClubMember);
+
         //public bool AssignActorRole(SandlerMovie sandlerMovie, Actor actor, AssignActorViewModel.AssignType assignmentType)
         //{
 
@@ -164,22 +178,39 @@ namespace UrsaSandlerMemberSite.Services
             return clubUser.FirstName;
         }
 
+        public Meeting GetThisWeeksMeeting() => _context.Meetings.Where(m => m.MeetingDate.Date >= DateTime.Today.Date).OrderBy(m => m.MeetingDate).Include(m=> m.Attenance).Include(m=> m.MeetingMovie).FirstOrDefault();
+
+        
+
+
         // Creational
 
         public async Task AddNewSandlerMovieAsync(SandlerMovie sandlerMovie)
         {
             sandlerMovie.PosterUrl = await _imageService.GetMoviePostUrl(sandlerMovie.Title);
-            _context.Add(sandlerMovie);
+            await _context.AddAsync(sandlerMovie);
             await _context.SaveChangesAsync();
         }
 
         public async Task AddActorAsync(Actor actor)
         {
             actor.ImageUrl = await _imageService.GetActorPhoto(actor.FullName);
-            _context.Add(actor);
+            await _context.AddAsync(actor);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddNewsPostAsync(NewsPost post)
+        {
+            await _context.NewsPosts.AddAsync(post);
             await _context.SaveChangesAsync();
         }
     
+        public async Task AddMeetingAsync(Meeting meeting)
+        {
+            await _context.Meetings.AddAsync(meeting);
+            await _context.SaveChangesAsync();
+        }
+
     }
 
 }

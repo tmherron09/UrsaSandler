@@ -27,6 +27,7 @@ namespace UrsaSandlerMemberSite.Data
         public DbSet<Attendance> Attendance { get; set; }
         public DbSet<MeetingComment> MeetingComments { get; set; }
 
-
+        public DbSet<NewsPost> NewsPosts { get; set; }
+        public DbSet<NewsPostComment> NewsPostComments { get; set; }
     }
 }
