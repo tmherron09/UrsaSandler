@@ -37,12 +37,6 @@
             <tbody class="text-sm font-medium text-gray-500">
                 @foreach (var item in Model)
                 {
-                    DateTime date = item.ReleaseDate ?? DateTime.MinValue;
-                    string formatedDate = "";
-                    if (date != DateTime.MinValue)
-                    {
-                        formatedDate = date.ToString("MMM dd, yyyy");
-                    }
                 <tr>
                     <td class="group h-full">
                         <form asp-action="Details" asp-route-id="@item.Id">
@@ -63,7 +57,7 @@
                         }
                     </td>
                     <td class="text-sm font-medium text-gray-500 whitespace-nowrap pr-4">
-                        @formatedDate
+                        @item.DateFormatted
                     </td>
                     <td class="text-sm font-medium text-gray-500 overflow-hidden hidden lg:block">
                         @item.Synonpsis

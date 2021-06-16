@@ -5,7 +5,7 @@
     SelectList movieList = new SelectList(Model.SandlerMovies, nameof(SandlerMovie.Id), nameof(SandlerMovie.Title));
 }
 
-<div class="container min-w-full bg-blue-100 pt-2 pb-8">
+<div class="min-h-screen min-w-full   bg-blue-100 pt-2 pb-8">
     <div class="w-max px-8 py-4 mx-auto mt-16 bg-white rounded-lg shadow-lg dark:bg-gray-800">
         <div class="my-4">
             <p class="text-center text-3xl font-bold text-gray-800 dark:text-white">Schedule Meeting</p>
@@ -13,16 +13,17 @@
 
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-red-500"></div>
-            <div class="flex justify-between">
+            <div class="flex justify-between items-center">
                 <div class="form-group">
-                    <label asp-for="MeetingDate" class="control-label"></label>
-                    <input type="date" asp-for="MeetingDate" class="form-control" />
+                    <input asp-for="MeetingDate" class="form-control flex-row" value=""/>
                     <span asp-validation-for="MeetingDate" class="text-danger"></span>
                 </div>
 
-                <select asp-for="SandlerMovieId" asp-items="movieList" class="flex-1 w-max text-gray-700 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-                    <option value="">Select Movie</option>
-                </select>
+                <div class="form-group">
+                    <select asp-for="SandlerMovieId" asp-items="movieList" class=" w-max text-gray-700 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                        <option value="">Select Movie</option>
+                    </select>
+                </div>
 
             </div>
             <div class="flex justify-right">

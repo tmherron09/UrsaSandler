@@ -1,39 +1,39 @@
 ﻿@model MeetingDetailViewModel
+@inject UserManager<ClubMember> userManager
 
 @{
     ViewData["Title"] = "Details";
 }
 
-
-
-
-<div class="bg-red-500">
-    @* TODO: Replace after image service *@
-    <div class="w-full bg-cover bg-no-repeat bg-center" style="height: 400px; background-image: url(@Model.SandlerMovie.PosterUrl);">
-    </div>
-    <div class="p-4">
-        <div class="relative flex w-full">
-            <!-- Starring Actor/Actors -->
-            <div class="flex flex-1">
-                <div style="margin-top: -4rem;" class="flex -space-x-2">
-                    @foreach (var starringActor in Model.StarringActors)
-                    {
-                        // TODO: Link to Actor Page
-                        <a href="#" class="hover:scale-150 hover:z-10 transform ease-in-out transition duration-500">
-                            <img class="inline-block h-20 w-20 rounded-full object-cover ring-2 ring-blue-300" src="@starringActor.ImageUrl" alt="@starringActor.FullName profile image" />
-                            <p class="absolute transform -translate-y-10 font-bold text-white text-opacity-75">@starringActor.FullName</p>
-                        </a>
-                    }
+<div class="flex flex-col flex-grow border-l border-r border-gray-300 mt-2">
+    <div class="flex flex-col md:flex-row max-h-full bg-red-500 border-b border-gray-500">
+        <div class="flex-1 max-h-full md:border-r-2">
+            <div class="flex-1 max-h-full md:border-r-2">
+                <img src="@Model.SandlerMovie.PosterUrl" class="max-h-full h-96 object-contain mx-auto" />
+            </div>
+            <div class="p-4">
+                <div class="relative flex w-full">
+                    <!-- Starring Actor/Actors -->
+                    <div class="flex flex-1">
+                        <div style="margin-top: -4rem;" class="flex -space-x-2">
+                            @foreach (var starringActor in Model.StarringActors)
+                            {
+                                // TODO: Link to Actor Page
+                                <a href="#" class="hover:scale-150 hover:z-10 transform ease-in-out transition duration-500">
+                                    <img class="inline-block h-20 w-20 rounded-full object-cover ring-2 ring-blue-300" src="@starringActor.ImageUrl" alt="@starringActor.FullName profile image" />
+                                    <p class="absolute transform -translate-y-10 font-bold text-white text-opacity-75">@starringActor.FullName</p>
+                                </a>
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="flex flex-col text-right">
-                <a asp-action="Edit" asp-route-id="@Model.SandlerMovie.Id" class="justify-center max-h-max max-w-max border-b-2 bg-indigo-50 border-blue-300 text-blue-500 hover:border-blue-500  flex items-center hover:shadow-lg transform hover:-translate-y-1 hover:scale-105 font-bold py-2 px-4 rounded mr-0 ml-auto">Edit Movie</a>
-            </div>
         </div>
+        <div class="flex-1 px-8 self-center mt-6 md:mt-0">
+            <span class="block text-4xl">Meeting for @Model.Meeting.DateFormatted</span>
+            <div class="space-y-1 justify-center w-full mt-3">
 
-        <div class="space-y-1 justify-center w-full mt-3 ml-3">
-            <div>
-                <h2 class="text-6xl leading-6 font-bold text-white font-serif">@Model.SandlerMovie.Title</h2>
+                <a asp-controller="SandlerMovies" asp-action="Details" asp-route-id="@Model.SandlerMovie.Id" class="text-6xl font-bold text-white font-serif">@Model.SandlerMovie.Title</a>
                 <span class="flex text-2xl mr-2 mt-10">
                     <!-- Todo Replace with Icon Set Calander  -->
                     <svg viewBox="0 0 24 24" class="h-5 w-5 paint-icon">
@@ -58,4 +58,77 @@
         </div>
     </div>
 </div>
-<hr class="border-4 border-gray-400" />
+
+@if (Model.MeetingAttendance.Where(ma => ma.Id == userManager.GetUserId(User)).FirstOrDefault() == null)
+{
+<form asp-controller="Meetings" asp-action="MarkAttended" asp-route-id="@Model.Meeting.Id">
+    <div class="p-2 mx-auto w-full min-w-full">
+        <button type="submit" class="border-2 p-2 w-full text-xl border-gray-500 bg-gray-50 text-black font-roboto hover:text-white hover:bg-gray-900 hover:no-underline">
+            Mark Attended
+        </button>
+    </div>
+</form>
+}
+
+<div class="w-3\/5 max-w-screen md:mx-8 mt-2">
+    <table class=" w-full max-w-screen shadow-lg divide-y divid-y-gray-800 border-b-4 border-gray-200">
+        <thead>
+            <tr class="text-xs font-medium text-gray-700 uppercase font-roboto ">
+                <th class="text-left pl-2 py-3">
+                    Date
+                </th>
+                <th class="text-left whitespace-nowrap pr-2  py-3">
+                    Sandler Movie Rating
+                </th>
+                <th class="text-left py-3">
+
+                </th>
+            </tr>
+        </thead>
+        <tbody class="text-sm font-medium text-gray-500">
+            @foreach (var item in Model.MeetingAttendance)
+            {
+                var rating = Model.AttendanceMovieRatings.Where(amr => amr.ClubMemberId == item.Id).FirstOrDefault();
+                <tr>
+                    <td class="group h-full">
+                        <form asp-controller="ClubMembers" asp-action="Details" asp-route-id="@item.Id">
+                            <button type="submit" class="py-auto font-medium text-gray-500 bg-white group-hover:text-blue-600 hover:no-underline w-48 h-8">
+                                @item.FirstName
+                            </button>
+                        </form>
+                    </td>
+                    @if (rating != null)
+                    {
+                        <td class="text-sm font-medium text-gray-500 overflow-hidden hidden lg:block">
+                            @rating.Rating pudding cups
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="text-sm font-medium text-gray-500 overflow-hidden hidden lg:block">
+                            Not Yet Rated
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+@*<div class="flex flex-col flex-grow border-l border-r border-gray-300">
+        <div class="flex flex-col md:flex-row max-h-full bg-red-500 border-b border-gray-500">
+            <div class="flex-1 md:border-r-2">
+                <img src="@Model.Meeting.MeetingMovie.PosterUrl" class="object-scale-down max-h-96 mx-auto" />
+            </div>
+            <div class="flex-1 px-8 self-center mt-6 md:mt-0">
+                <span class="block text-5xl">Meeting for @Model.Meeting.DateFormatted</span>
+                <h3 class="text-3xl mt-2">Join us this Week for</h3>
+                <span class="block uppercase font-bold text-3xl text-white mt-5 mb-6 md:mb-0">
+                    <a asp-controller="SandlerMovies" asp-action="Details" asp-route-id="@Model.Meeting.MeetingMovie.Id">@Model.Meeting.MeetingMovie.Title</a>
+                </span>
+            </div>
+        </div>
+
+    </div>*@

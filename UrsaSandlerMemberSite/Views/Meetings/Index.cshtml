@@ -2,17 +2,73 @@
 
 @{
     ViewData["Title"] = "Index";
+    var thisWeeksMeeting = Model.OrderBy(m => m.MeetingDate).FirstOrDefault();
+}
+
+@if (thisWeeksMeeting != null)
+{
+    <div class="flex flex-col md:flex-row max-h-full bg-red-500 border-b border-gray-500">
+        <div class="flex-1 md:border-r-2">
+            <img src="@thisWeeksMeeting.MeetingMovie.PosterUrl" class="object-scale-down max-h-96 mx-auto" />
+        </div>
+        <div class="flex-1 px-8 self-center mt-6 md:mt-0">
+            <a asp-controller="Meetings" asp-action="Details" asp-route-id="@thisWeeksMeeting.Id" class="block text-5xl">This Week's Meeting</a>
+            <h3 class="text-3xl mt-2">Join us this Week for</h3>
+            <span class="block uppercase font-bold text-3xl text-white mt-5 mb-6 md:mb-0">
+                <a asp-controller="SandlerMovies" asp-action="Details" asp-route-id="@thisWeeksMeeting.MeetingMovie.Id">@thisWeeksMeeting.MeetingMovie.Title</a>
+            </span>
+        </div>
+    </div>
 }
 
 
+    <div class="container">
+        <div class="w-full mx-auto text-center m-6 font-rubik">
+            <span class="text-5xl font-medium">Sandler Movie Index</span>
+        </div>
+        <div class="p-2 md:mx-6 w-max">
+            <a asp-action="Create" class="border-2 p-2 text-xl border-gray-500 bg-gray-50 text-black font-roboto hover:text-white hover:bg-gray-900 hover:no-underline">
+                Add Movie New
+            </a>
+        </div>
+        <div class="max-w-screen md:mx-8 mt-2">
+            <table class="max-w-screen shadow-lg divide-y divid-y-gray-800 border-b-4 border-gray-200">
+                <thead>
+                    <tr class="text-xs font-medium text-gray-700 uppercase font-roboto ">
+                        <th class="text-left pl-2 py-3">
+                            Date
+                        </th>
+                        <th class="text-left whitespace-nowrap pr-2  py-3">
+                            Sandler Movie
+                        </th>
+                        <th class="text-left py-3">
 
-<div class="flex flex-col flex-grow border-l border-r border-gray-300">
-    <div class="flex justify-between flex-shrink-0 px-8 py-4 border-b border-gray-300">
-        <h1 class="text-xl font-semibold">Feed Title</h1>
-        <button class="flex items-center h-8 px-2 text-sm bg-gray-300 rounded-sm hover:bg-gray-400">New post</button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm font-medium text-gray-500">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="group h-full">
+                                <form asp-action="Details" asp-route-id="@item.Id">
+                                    <button type="submit" class="py-auto font-medium text-gray-500 bg-white group-hover:text-blue-600 hover:no-underline w-48 h-8">
+                                        @item.DateFormatted
+                                    </button>
+                                </form>
+                            </td>
+                            <td class="text-sm font-medium text-gray-500 overflow-hidden hidden lg:block">
+                                @item.MeetingMovie.Title
+                            </td>
+                            <td class="text-sm font-medium text-blue-300 px-8">
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit Meeting</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-
-</div>
 
     @*<h1>Index</h1>
 
