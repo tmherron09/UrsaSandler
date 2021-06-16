@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,18 +19,20 @@ namespace UrsaSandlerMemberSite.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly DataService _dataService;
+        private readonly UserManager<ClubMember> _userManager;
 
 
-        public MeetingsController(ApplicationDbContext context, DataService dataService)
+        public MeetingsController(ApplicationDbContext context, DataService dataService, UserManager<ClubMember> userManager)
         {
             _context = context;
             _dataService = dataService;
+            _userManager = userManager;
         }
 
         // GET: Meetings
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Meetings.ToListAsync());
+            return View(_dataService.GetAllMeetings());
         }
 
         // GET: Meetings/Details/5
@@ -54,9 +57,9 @@ namespace UrsaSandlerMemberSite.Controllers
         // GET: Meetings/Create
         public IActionResult Create()
         {
-            List<SandlerMovie> allMovies = _dataService.GetAllSandlerMovies();
+            CreateMeetingViewModel viewModel = new CreateMeetingViewModel(_dataService);
 
-            return View(allMovies);
+            return View(viewModel);
         }
 
 
@@ -71,7 +74,7 @@ namespace UrsaSandlerMemberSite.Controllers
 
             Meeting meeting = new Meeting();
             meeting.MeetingDate = meetingViewModel.MeetingDate;
-            meeting.MeetingMovie.Id = meetingViewModel.SandlerMovieId;
+            meeting.MeetingMovie = _dataService.GetMovieById(meetingViewModel.SandlerMovieId);
 
 
             try
@@ -84,6 +87,37 @@ namespace UrsaSandlerMemberSite.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+
+        public async Task<IActionResult> MarkAttended(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var clubMemberId = _userManager.GetUserId(User);
+
+            if (_context.Attendance.Where(a=> a.ClubMember.Id == clubMemberId && a.Meeting.Id == id).FirstOrDefault() != null)
+            {
+                return RedirectToAction(nameof(Details), new { id = id });
+            }
+            Attendance attendance = new Attendance();
+            attendance.Meeting = _dataService.GetMeetingById(id);
+            attendance.ClubMember = _context.Users.Where(u => u.Id == clubMemberId).FirstOrDefault();
+            try
+            {
+                await _context.Attendance.AddAsync(attendance);
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new Exception();
+            }
+
+            return RedirectToAction(nameof(Details), new { id = id });
+
         }
 
         // GET: Meetings/Edit/5
