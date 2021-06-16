@@ -20,5 +20,7 @@ namespace UrsaSandlerMemberSite.Models
         public string Comment { get; set; }
         [DataType(DataType.Date)]
         public DateTime TimeStamp { get; set; }
+        [NotMapped]
+        public string DateFormatted => TimeStamp.ToString("MMM dd, yyyy");
     }
 }

@@ -15,6 +15,9 @@ namespace UrsaSandlerMemberSite.ViewModels
         public List<Actor> CoStarringActors;
         public List<Actor> GuestActors;
         public List<MovieComment> MovieComments;
+        public List<SandlerMovieRating> AttendanceMovieRatings { get; set; }
+
+
         public double? MovieRating;
         public List<ClubMember> MeetingAttendance { get; set; }
 
@@ -28,6 +31,7 @@ namespace UrsaSandlerMemberSite.ViewModels
             CoStarringActors = dataService.GetMovieCoStarsById(SandlerMovie.Id).ToList();
             GuestActors = dataService.GetMovieGuestAppearencesById(SandlerMovie.Id).ToList();
             MeetingAttendance = dataService.GetAttendanceByMeetingId(Meeting.Id).ToList();
+            AttendanceMovieRatings = dataService.GetMovieRatingByMeetingId(Meeting.Id).ToList();
         }
 
     }
