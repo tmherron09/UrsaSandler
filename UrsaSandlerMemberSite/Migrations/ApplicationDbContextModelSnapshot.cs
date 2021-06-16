@@ -453,6 +453,60 @@ namespace UrsaSandlerMemberSite.Migrations
                     b.ToTable("MovieComments");
                 });
 
+            modelBuilder.Entity("UrsaSandlerMemberSite.Models.NewsPost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("BodyText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClubMemberId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClubMemberId");
+
+                    b.ToTable("NewsPosts");
+                });
+
+            modelBuilder.Entity("UrsaSandlerMemberSite.Models.NewsPostComment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CommentPosterId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentPosterId");
+
+                    b.ToTable("NewsPostComments");
+                });
+
             modelBuilder.Entity("UrsaSandlerMemberSite.Models.SandlerMovie", b =>
                 {
                     b.Property<int>("Id")
@@ -637,7 +691,7 @@ namespace UrsaSandlerMemberSite.Migrations
                         .HasForeignKey("CommentPosterId");
 
                     b.HasOne("UrsaSandlerMemberSite.Models.Meeting", "Meeting")
-                        .WithMany()
+                        .WithMany("MeetingComments")
                         .HasForeignKey("MeetingId");
                 });
 
@@ -652,6 +706,20 @@ namespace UrsaSandlerMemberSite.Migrations
                         .HasForeignKey("SandlerMovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("UrsaSandlerMemberSite.Models.NewsPost", b =>
+                {
+                    b.HasOne("UrsaSandlerMemberSite.Models.ClubMember", "ClubMember")
+                        .WithMany()
+                        .HasForeignKey("ClubMemberId");
+                });
+
+            modelBuilder.Entity("UrsaSandlerMemberSite.Models.NewsPostComment", b =>
+                {
+                    b.HasOne("UrsaSandlerMemberSite.Models.ClubMember", "CommentPoster")
+                        .WithMany()
+                        .HasForeignKey("CommentPosterId");
                 });
 
             modelBuilder.Entity("UrsaSandlerMemberSite.Models.SandlerMovieRating", b =>

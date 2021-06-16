@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace UrsaSandlerMemberSite.Migrations
 {
-    public partial class LiveServerPushCMU : Migration
+    public partial class LivePushFix_ConnectionOverrideExternal : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -356,6 +356,50 @@ namespace UrsaSandlerMemberSite.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "NewsPostComments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CommentPosterId = table.Column<string>(nullable: true),
+                    Comment = table.Column<string>(nullable: true),
+                    TimeStamp = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NewsPostComments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NewsPostComments_AspNetUsers_CommentPosterId",
+                        column: x => x.CommentPosterId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NewsPosts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(nullable: false),
+                    BodyText = table.Column<string>(nullable: false),
+                    ImageUrl = table.Column<string>(nullable: true),
+                    ClubMemberId = table.Column<string>(nullable: true),
+                    Timestamp = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NewsPosts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NewsPosts_AspNetUsers_ClubMemberId",
+                        column: x => x.ClubMemberId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SandlerMovieRatings",
                 columns: table => new
                 {
@@ -561,6 +605,16 @@ namespace UrsaSandlerMemberSite.Migrations
                 column: "SandlerMovieId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_NewsPostComments_CommentPosterId",
+                table: "NewsPostComments",
+                column: "CommentPosterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NewsPosts_ClubMemberId",
+                table: "NewsPosts",
+                column: "ClubMemberId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SandlerMovieRatings_ClubMemberId",
                 table: "SandlerMovieRatings",
                 column: "ClubMemberId");
@@ -608,6 +662,12 @@ namespace UrsaSandlerMemberSite.Migrations
 
             migrationBuilder.DropTable(
                 name: "MovieComments");
+
+            migrationBuilder.DropTable(
+                name: "NewsPostComments");
+
+            migrationBuilder.DropTable(
+                name: "NewsPosts");
 
             migrationBuilder.DropTable(
                 name: "SandlerMovieRatings");

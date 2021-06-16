@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210614034139_LiveServerPushCMU.cs" />
+    <Compile Remove="Migrations\20210614034139_LiveServerPushCMU.Designer.cs" />
+    <Compile Remove="Migrations\20210616184149_MeetingsUpdateOne.cs" />
+    <Compile Remove="Migrations\20210616184149_MeetingsUpdateOne.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.16" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.16" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.16" />
