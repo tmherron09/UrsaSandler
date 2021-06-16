@@ -90,11 +90,26 @@ namespace UrsaSandlerMemberSite.Services
         public IEnumerable<NewsPost> GetNewsPostsPage(int pageNumber, int amount) =>
             _context.NewsPosts.Include(np => np.ClubMember).OrderByDescending(np => np.Timestamp).Skip(pageNumber * amount).Take(amount);
 
+        public IEnumerable<Meeting> GetAllMeetings() =>
+            _context.Meetings.Include(m => m.MeetingMovie);
         public Meeting GetMeetingById(int meetingId) =>
             _context.Meetings.Where(m => m.Id == meetingId).Include(m => m.MeetingMovie).FirstOrDefault();
 
         public IEnumerable<ClubMember> GetAttendanceByMeetingId(int meetingId) =>
             _context.Attendance.Where(a => a.Meeting.Id == meetingId).Include(a => a.ClubMember).Select(a=> a.ClubMember);
+
+        public IEnumerable<SandlerMovieRating> GetMovieRatingByMeetingId(int meetingId)
+        {
+            Meeting meeting = _context.Meetings.Where(m => m.Id == meetingId).FirstOrDefault();
+            if(meeting == null)
+            {
+                return null;
+            }
+
+            var attendance = GetAttendanceByMeetingId(meetingId).Select(a=> a.Id);
+
+            return _context.SandlerMovieRatings.Where(smr=> smr.SandlerMovieId == meeting.MeetingMovie.Id && attendance.Contains(smr.ClubMemberId)).AsEnumerable();
+        }
 
         //public bool AssignActorRole(SandlerMovie sandlerMovie, Actor actor, AssignActorViewModel.AssignType assignmentType)
         //{
