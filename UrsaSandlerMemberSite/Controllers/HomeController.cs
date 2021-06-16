@@ -32,7 +32,7 @@ namespace UrsaSandlerMemberSite.Controllers
                 return RedirectToPage("Index");
             }
 
-            return View("Home");
+            return RedirectToAction(nameof(Home));
         }
 
         [Authorize]
@@ -47,6 +47,7 @@ namespace UrsaSandlerMemberSite.Controllers
 
 
         [Authorize]
+        [HttpGet]
         public IActionResult NewPost()
         {
             NewsPost newPost = new NewsPost();
@@ -55,6 +56,7 @@ namespace UrsaSandlerMemberSite.Controllers
         }
 
         [Authorize]
+        [HttpPost]
         public async Task<IActionResult> NewPost([Bind("Title, BodyText, ImageUrl")] NewsPost post)
         {
             if (!ModelState.IsValid)
