@@ -19,7 +19,7 @@
                             @foreach (var starringActor in Model.StarringActors)
                             {
                                 // TODO: Link to Actor Page
-                                <a href="#" class="hover:scale-150 hover:z-10 transform ease-in-out transition duration-500">
+                                <a asp-controller="Actors" asp-action="Details" asp-route-id="@starringActor.Id" class="hover:scale-150 hover:z-10 transform ease-in-out transition duration-500">
                                     <img class="inline-block h-20 w-20 rounded-full object-cover ring-2 ring-blue-300" src="@starringActor.ImageUrl" alt="@starringActor.FullName profile image" />
                                     <p class="absolute transform -translate-y-10 font-bold text-white text-opacity-75">@starringActor.FullName</p>
                                 </a>
