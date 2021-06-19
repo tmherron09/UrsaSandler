@@ -33,7 +33,7 @@ namespace UrsaSandlerMemberSite
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             //services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddDefaultIdentity<ClubMember>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ClubMember>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddSession();
 

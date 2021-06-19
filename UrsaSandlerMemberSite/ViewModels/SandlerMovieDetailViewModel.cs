@@ -15,9 +15,10 @@ namespace UrsaSandlerMemberSite.ViewModels
         public List<Actor> GuestActors;
         public List<MovieComment> MovieComments;
         public double? MovieRating;
+        public SandlerMovieRating ClubUserRating;
 
 
-        public SandlerMovieDetailViewModel(SandlerMovie sandlerMovie, List<Actor> starringActors, List<Actor> coStarringActors, List<Actor> guestActors, List<MovieComment> movieComments, double movieRating)
+        public SandlerMovieDetailViewModel(SandlerMovie sandlerMovie, List<Actor> starringActors, List<Actor> coStarringActors, List<Actor> guestActors, List<MovieComment> movieComments)
         {
             SandlerMovie = sandlerMovie;
             StarringActors = starringActors;
@@ -26,7 +27,7 @@ namespace UrsaSandlerMemberSite.ViewModels
             MovieComments = movieComments;
         }
 
-        public SandlerMovieDetailViewModel(SandlerMovie sandlerMovie, DataService dataService)
+        public SandlerMovieDetailViewModel(SandlerMovie sandlerMovie, string clubMemberId, DataService dataService)
         {
             SandlerMovie = sandlerMovie;
             MovieComments = dataService.GetMovieCommentsById(sandlerMovie.Id).ToList();
@@ -34,7 +35,7 @@ namespace UrsaSandlerMemberSite.ViewModels
             StarringActors = dataService.GetMovieStarringRolesById(sandlerMovie.Id).ToList();
             CoStarringActors = dataService.GetMovieCoStarsById(sandlerMovie.Id).ToList();
             GuestActors = dataService.GetMovieGuestAppearencesById(sandlerMovie.Id).ToList();
-
+            ClubUserRating = dataService.GetMovieRatingByUser(SandlerMovie.Id, clubMemberId);
         }
 
     }

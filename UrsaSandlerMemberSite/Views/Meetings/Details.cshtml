@@ -61,17 +61,17 @@
 
 @if (Model.MeetingAttendance.Where(ma => ma.Id == userManager.GetUserId(User)).FirstOrDefault() == null)
 {
-<form asp-controller="Meetings" asp-action="MarkAttended" asp-route-id="@Model.Meeting.Id">
-    <div class="p-2 mx-auto w-full min-w-full">
-        <button type="submit" class="border-2 p-2 w-full text-xl border-gray-500 bg-gray-50 text-black font-roboto hover:text-white hover:bg-gray-900 hover:no-underline">
-            Mark Attended
-        </button>
-    </div>
-</form>
+    <form asp-controller="Meetings" asp-action="MarkAttended" asp-route-id="@Model.Meeting.Id">
+        <div class="p-2 mx-auto w-full min-w-full">
+            <button type="submit" class="border-2 p-2 w-full text-xl border-gray-500 bg-gray-50 text-black font-roboto hover:text-white hover:bg-gray-900 hover:no-underline">
+                Mark Attended
+            </button>
+        </div>
+    </form>
 }
 
-<div class="w-3\/5 max-w-screen md:mx-8 mt-2">
-    <table class=" w-full max-w-screen shadow-lg divide-y divid-y-gray-800 border-b-4 border-gray-200">
+<div class="w-4/5 md:max-w-screen md:mx-8 mt-2">
+    <table class=" w-full md:max-w-screen shadow-lg divide-y divid-y-gray-800 border-b-4 border-gray-200">
         <thead>
             <tr class="text-xs font-medium text-gray-700 uppercase font-roboto ">
                 <th class="text-left pl-2 py-3">
@@ -86,6 +86,20 @@
             </tr>
         </thead>
         <tbody class="text-sm font-medium text-gray-500">
+            @if (Model.MovieRating != null)
+            {
+                <tr>
+                    <td class="group h-full">
+                        <span class="block py-auto text-center font-medium text-gray-500 bg-white group-hover:text-blue-600 hover:no-underline w-48 h-8">
+                            Overall Club Rating
+                        </span>
+                    </td>
+                    <td class="text-sm font-medium text-gray-500 overflow-hidden lg:block">
+                        @Model.MovieRating pudding cups
+                    </td>
+                </tr>
+            }
+
             @foreach (var item in Model.MeetingAttendance)
             {
                 var rating = Model.AttendanceMovieRatings.Where(amr => amr.ClubMemberId == item.Id).FirstOrDefault();
@@ -99,13 +113,13 @@
                     </td>
                     @if (rating != null)
                     {
-                        <td class="text-sm font-medium text-gray-500 overflow-hidden hidden lg:block">
+                        <td class="text-sm font-medium text-gray-500 overflow-hidden lg:block">
                             @rating.Rating pudding cups
                         </td>
                     }
                     else
                     {
-                        <td class="text-sm font-medium text-gray-500 overflow-hidden hidden lg:block">
+                        <td class="text-sm font-medium text-gray-500 overflow-hidden lg:block">
                             Not Yet Rated
                         </td>
                     }
