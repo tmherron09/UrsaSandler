@@ -36,13 +36,17 @@ namespace UrsaSandlerMemberSite.Services
             _context.Actors.Where(a => a.Id == id).FirstOrDefault();
 
 
-        public double GetMovieRating(int sandlerMovieId)
+        public double? GetMovieRating(int sandlerMovieId)
         {
+            var allRatings = _context.SandlerMovieRatings.Where(smr => smr.SandlerMovieId == sandlerMovieId);
+            double tempRating = 0;
+            foreach(var rating in allRatings)
+            {
+                tempRating += rating.Rating;
+            }
 
-
-            return 0;
+            return tempRating / allRatings.Count();
         }
-
         public IEnumerable<MovieComment> GetMovieCommentsById(int sandlerMovieId) =>
             _context.MovieComments.Where(sm => sm.Id == sandlerMovieId).Include(sm => sm.CommentPoster);
 
@@ -195,7 +199,7 @@ namespace UrsaSandlerMemberSite.Services
 
         public Meeting GetThisWeeksMeeting() => _context.Meetings.Where(m => m.MeetingDate.Date >= DateTime.Today.Date).OrderBy(m => m.MeetingDate).Include(m=> m.Attenance).Include(m=> m.MeetingMovie).FirstOrDefault();
 
-        
+        public SandlerMovieRating GetMovieRatingByUser(int movieId, string userId) => _context.SandlerMovieRatings.Where(smr => smr.SandlerMovieId == movieId && smr.ClubMemberId == userId).FirstOrDefault();
 
 
         // Creational
@@ -223,6 +227,23 @@ namespace UrsaSandlerMemberSite.Services
         public async Task AddMeetingAsync(Meeting meeting)
         {
             await _context.Meetings.AddAsync(meeting);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddMovieRatingAsync(SandlerMovieRating movieRating)
+        {
+            var previousRating = _context.SandlerMovieRatings.Where(smr => smr.ClubMemberId == movieRating.ClubMemberId && smr.SandlerMovieId == movieRating.SandlerMovieId).FirstOrDefault();
+
+
+            if (previousRating == null)
+            {
+                await _context.SandlerMovieRatings.AddAsync(movieRating);
+                
+            } else
+            {
+                previousRating.Rating = movieRating.Rating;
+                _context.SandlerMovieRatings.Update(previousRating);
+            }
             await _context.SaveChangesAsync();
         }
 
