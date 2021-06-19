@@ -49,7 +49,7 @@ namespace UrsaSandlerMemberSite.Controllers
                 return NotFound();
             }
 
-            SandlerMovieDetailViewModel movieViewModel = new SandlerMovieDetailViewModel(sandlerMovie, _dataService);
+            SandlerMovieDetailViewModel movieViewModel = new SandlerMovieDetailViewModel(sandlerMovie, _userManager.GetUserId(User), _dataService);
 
             return View(movieViewModel);
         }
@@ -109,6 +109,33 @@ namespace UrsaSandlerMemberSite.Controllers
             }
 
             
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssignMovieRating([FromForm(Name = "SandlerMovieId")] int sandlerMovieId, [FromForm(Name = "Rating")] double rating)
+        {
+            if(!ModelState.IsValid || rating > 26 || rating < 0)
+            {
+                return BadRequest();
+            }
+
+            var userId = _userManager.GetUserId(User);
+            SandlerMovieRating movieRating = new SandlerMovieRating()
+            {
+                SandlerMovieId = sandlerMovieId,
+                ClubMemberId = userId,
+                Rating = rating
+            };
+
+            try
+            {
+                await _dataService.AddMovieRatingAsync(movieRating);
+            }
+            catch
+            {
+                throw new Exception();
+            }
+            return RedirectToAction(nameof(Details), new { id = sandlerMovieId });
         }
 
 
