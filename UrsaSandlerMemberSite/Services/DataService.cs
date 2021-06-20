@@ -48,7 +48,7 @@ namespace UrsaSandlerMemberSite.Services
             return tempRating / allRatings.Count();
         }
         public IEnumerable<MovieComment> GetMovieCommentsById(int sandlerMovieId) =>
-            _context.MovieComments.Where(sm => sm.Id == sandlerMovieId).Include(sm => sm.CommentPoster);
+            _context.MovieComments.Where(sm => sm.SandlerMovieId == sandlerMovieId).Include(sm => sm.CommentPoster);
 
         public async Task<MovieComment> CreateMovieCommentPost(IFormCollection collection, string userId)
         {
