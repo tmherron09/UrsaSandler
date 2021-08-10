@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
-    var thisWeeksMeeting = Model.OrderBy(m => m.MeetingDate).FirstOrDefault();
+    var thisWeeksMeeting = Model.OrderByDescending(m => m.MeetingDate).FirstOrDefault();
 }
 
 @if (thisWeeksMeeting != null)
